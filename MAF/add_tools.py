@@ -4,6 +4,7 @@ from azure.identity.aio import AzureCliCredential
 
 import asyncio
 from agent_framework import Agent
+from azure.ai.projects.models import OpenApiTool
 from agent_framework.foundry import FoundryChatClient
 
 load_dotenv()
@@ -20,26 +21,20 @@ async def main():
         model=model
     )
 
-    agent = Agent(
-        client=client,
-        name = agent_name,
-        instructions="You are an AI Assistant"
+    weather_tool = OpenApiTool(
+        name="weather_api",
+        specification_path="../apis/weather_api.json",
     )
 
-    return agent
+    agent = Agent(
+        client=client,
+        name = "AgentFromCode",
+        instructions="You are an AI Assistant. Use the weather_api tool whenever weather information is requested.",
+        tools = [weather_tool]
+    )
 
-agent = asyncio.run(main())
+    result = await agent.run("What's the weather like in Seattle?")
+    print(result)
 
-# async def non_streaming_example():
-#     query = "Capital of India?"
-#     result = await agent.run(query)
-#     print("Agent Response:", result)
-
-# asyncio.run(non_streaming_example())
-
-async def streaming_example():
-    async for chunk in agent.run("Tell me a one-sentence fun fact.", stream=True):
-        if chunk.text:
-            print(chunk.text, end="", flush=True)
-
-asyncio.run(streaming_example())
+if __name__ == "__main__":
+    asyncio.run(main())
