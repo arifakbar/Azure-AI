@@ -3,3 +3,5 @@ openai
 python-dotenv 
 azure-identity
 jsonref
+agent-framework
+agent-framework-azure-ai
