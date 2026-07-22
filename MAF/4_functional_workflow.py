@@ -38,7 +38,7 @@ async def main():
         review_poem =(await experienced_writer.run(f"Review the following poem and provide a better version:\n{poem}")).text
         return f"Poem:\n{poem}\n\nReview: {review_poem}"
     
-    res = await poem_workflow.run("AI is coming to change the world")
+    res = await poem_workflow.run("Anime over Movies")
     print(f"{res.get_outputs()[0]}\n")
 
 if __name__ == "__main__":
